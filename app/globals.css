@@ -24,7 +24,8 @@
 }
 
 html {
-  scroll-behavior: smooth;
+  /* scroll-behavior managed by Lenis for smooth scroll */
+  scroll-behavior: auto;
 }
 
 body {
@@ -786,6 +787,21 @@ body {
 .btn-outline:hover {
   border-color: var(--white);
   background: rgba(255,255,255,0.04);
+}
+
+/* ─── STATS GRID ───────────────────────────────── */
+@media (max-width: 768px) {
+  .stats-grid-4 {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
+
+/* ─── HERO RESPONSIVE ──────────────────────────── */
+@media (max-width: 1023px) {
+  .hero-section {
+    grid-template-columns: 1fr !important;
+    min-height: auto !important;
+  }
 }
 
 /* ─── UTILITIES ────────────────────────────────── */

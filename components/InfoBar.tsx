@@ -1,10 +1,38 @@
-import Image from "next/image";
+'use client';
+
+import { useRef } from 'react';
+import Image from 'next/image';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useGSAP } from '@gsap/react';
+
+gsap.registerPlugin(ScrollTrigger, useGSAP);
 
 export default function InfoBar() {
+  const sectionRef = useRef<HTMLElement>(null);
+
+  useGSAP(() => {
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReduced) return;
+
+    gsap.from(sectionRef.current?.querySelectorAll('.info-cell') ?? [], {
+      opacity: 0,
+      y: 24,
+      stagger: 0.1,
+      duration: 0.7,
+      ease: 'power3.out',
+      scrollTrigger: {
+        trigger: sectionRef.current,
+        start: 'top 80%',
+        once: true,
+      },
+    });
+  }, { scope: sectionRef });
+
   return (
-    <aside className="info-bar" aria-label="Restaurant information" id="visit">
+    <aside ref={sectionRef} className="info-bar" aria-label="Restaurant information" id="visit">
       {/* Visit Us */}
-      <div className="info-bar-cell">
+      <div className="info-bar-cell info-cell">
         <MapPinIcon />
         <p className="info-bar-title">Visit Us</p>
         <p className="info-bar-text">
@@ -15,7 +43,7 @@ export default function InfoBar() {
       </div>
 
       {/* Call Us */}
-      <div className="info-bar-cell">
+      <div className="info-bar-cell info-cell">
         <PhoneIcon />
         <p className="info-bar-title">Call Us</p>
         <p className="info-bar-text">
@@ -24,7 +52,7 @@ export default function InfoBar() {
       </div>
 
       {/* Hours */}
-      <div className="info-bar-cell">
+      <div className="info-bar-cell info-cell">
         <ClockIcon />
         <p className="info-bar-title">Hours</p>
         <p className="info-bar-text">
@@ -37,48 +65,36 @@ export default function InfoBar() {
       </div>
 
       {/* Follow Us */}
-      <div className="info-bar-cell" id="contact">
+      <div className="info-bar-cell info-cell" id="contact">
         <SocialIcon />
         <p className="info-bar-title">Follow Us</p>
         <div className="info-bar-socials">
-          <a
-            href="#"
-            className="info-bar-social-btn"
-            aria-label="Follow us on Instagram"
-          >
+          <a href="#" className="info-bar-social-btn" aria-label="Follow us on Instagram">
             <InstagramIcon />
           </a>
-          <a
-            href="#"
-            className="info-bar-social-btn"
-            aria-label="Follow us on Facebook"
-          >
+          <a href="#" className="info-bar-social-btn" aria-label="Follow us on Facebook">
             <FacebookIcon />
           </a>
-          <a
-            href="#"
-            className="info-bar-social-btn"
-            aria-label="Find us on Yelp"
-          >
+          <a href="#" className="info-bar-social-btn" aria-label="Find us on Yelp">
             <YelpIcon />
           </a>
         </div>
       </div>
 
       {/* Dine With Us */}
-      <div className="info-bar-cell">
+      <div className="info-bar-cell info-cell">
         <DineIcon />
         <p className="info-bar-title">Dine With Us</p>
-        <p className="info-bar-text" style={{ fontSize: "0.72rem", color: "var(--gray)" }}>
+        <p className="info-bar-text" style={{ fontSize: '0.72rem', color: 'var(--gray)' }}>
           Walk-ins welcome! Great food. Good people. See you soon.
         </p>
         <div className="info-bar-interior">
           <Image
-            src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=200&q=80&auto=format&fit=crop"
+            src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=400&q=85&auto=format&fit=crop"
             alt="Tasty's Joint interior dining"
             fill
             sizes="200px"
-            style={{ objectFit: "cover" }}
+            style={{ objectFit: 'cover' }}
           />
         </div>
       </div>
@@ -88,17 +104,7 @@ export default function InfoBar() {
 
 function MapPinIcon() {
   return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={1.8}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className="info-bar-icon"
-      aria-hidden="true"
-    >
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" className="info-bar-icon" aria-hidden="true">
       <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
       <circle cx="12" cy="10" r="3" />
     </svg>
@@ -107,17 +113,7 @@ function MapPinIcon() {
 
 function PhoneIcon() {
   return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={1.8}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className="info-bar-icon"
-      aria-hidden="true"
-    >
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" className="info-bar-icon" aria-hidden="true">
       <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.6 3.37 2 2 0 0 1 3.58 1h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.91 8.4a16 16 0 0 0 5.68 5.68l.91-.92a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
     </svg>
   );
@@ -125,17 +121,7 @@ function PhoneIcon() {
 
 function ClockIcon() {
   return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={1.8}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className="info-bar-icon"
-      aria-hidden="true"
-    >
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" className="info-bar-icon" aria-hidden="true">
       <circle cx="12" cy="12" r="10" />
       <polyline points="12 6 12 12 16 14" />
     </svg>
@@ -144,17 +130,7 @@ function ClockIcon() {
 
 function SocialIcon() {
   return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={1.8}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className="info-bar-icon"
-      aria-hidden="true"
-    >
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" className="info-bar-icon" aria-hidden="true">
       <circle cx="18" cy="5" r="3" />
       <circle cx="6" cy="12" r="3" />
       <circle cx="18" cy="19" r="3" />
@@ -166,17 +142,7 @@ function SocialIcon() {
 
 function DineIcon() {
   return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={1.8}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className="info-bar-icon"
-      aria-hidden="true"
-    >
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" className="info-bar-icon" aria-hidden="true">
       <path d="M3 11l19-9-9 19-2-8-8-2z" />
     </svg>
   );
@@ -184,18 +150,7 @@ function DineIcon() {
 
 function InstagramIcon() {
   return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={1.8}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      width={14}
-      height={14}
-      aria-hidden="true"
-    >
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" width={14} height={14} aria-hidden="true">
       <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
       <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
       <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
@@ -205,18 +160,7 @@ function InstagramIcon() {
 
 function FacebookIcon() {
   return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={1.8}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      width={14}
-      height={14}
-      aria-hidden="true"
-    >
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" width={14} height={14} aria-hidden="true">
       <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
     </svg>
   );
@@ -224,18 +168,7 @@ function FacebookIcon() {
 
 function YelpIcon() {
   return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={1.8}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      width={14}
-      height={14}
-      aria-hidden="true"
-    >
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" width={14} height={14} aria-hidden="true">
       <circle cx="12" cy="12" r="10" />
       <path d="M12 8v4l3 3" />
     </svg>

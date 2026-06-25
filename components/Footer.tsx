@@ -1,190 +1,269 @@
-"use client";
+'use client';
 
-import Link from "next/link";
-import { motion } from "framer-motion";
+import { useRef } from 'react';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useGSAP } from '@gsap/react';
 
-const navLinks = [
-  { label: "Home", href: "/" },
-  { label: "Menu", href: "/menu" },
-  { label: "About", href: "/about" },
-  { label: "Location", href: "#location" },
-  { label: "Contact", href: "#contact" },
-];
+gsap.registerPlugin(ScrollTrigger, useGSAP);
 
-const socialLinks = [
-  { label: "Instagram", href: "#", icon: <InstagramIcon /> },
-  { label: "Facebook", href: "#", icon: <FacebookIcon /> },
-  { label: "Yelp", href: "#", icon: <YelpIcon /> },
+const NAV_LINKS = [
+  { label: 'Menu', href: '/menu' },
+  { label: 'About', href: '/about' },
+  { label: 'Visit Us', href: '#visit' },
+  { label: 'Reviews', href: '#reviews' },
+  { label: 'Contact', href: '#contact' },
 ];
 
 export default function Footer() {
+  const sectionRef = useRef<HTMLElement>(null);
+
+  useGSAP(() => {
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReduced) return;
+
+    gsap.from(sectionRef.current?.querySelectorAll('.footer-reveal') ?? [], {
+      opacity: 0,
+      y: 20,
+      stagger: 0.08,
+      duration: 0.7,
+      ease: 'power3.out',
+      scrollTrigger: {
+        trigger: sectionRef.current,
+        start: 'top 85%',
+        once: true,
+      },
+    });
+  }, { scope: sectionRef });
+
   return (
-    <footer className="bg-surface-dark border-t border-white/5">
-      {/* Sauce drip from CTA section */}
-      <div className="overflow-hidden leading-none">
-        <svg
-          viewBox="0 0 1440 40"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-          className="w-full"
-          preserveAspectRatio="none"
+    <footer
+      ref={sectionRef}
+      style={{
+        background: '#070707',
+        borderTop: '1px solid var(--border)',
+        padding: 'clamp(3rem, 6vw, 5rem) clamp(1.5rem, 5%, 5rem) 2rem',
+      }}
+      role="contentinfo"
+    >
+      {/* Big wordmark */}
+      <div
+        className="footer-reveal"
+        style={{
+          marginBottom: '3rem',
+          paddingBottom: '3rem',
+          borderBottom: '1px solid var(--border)',
+          overflow: 'hidden',
+        }}
+      >
+        <p
+          style={{
+            fontFamily: 'var(--font-playfair), serif',
+            fontSize: 'clamp(3rem, 10vw, 8rem)',
+            fontWeight: 700,
+            color: 'rgba(245,240,232,0.06)',
+            letterSpacing: '0.05em',
+            lineHeight: 1,
+            userSelect: 'none',
+            margin: 0,
+          }}
+          aria-hidden="true"
         >
-          <path
-            d="M0 0C240 30 480 20 720 25C960 30 1200 15 1440 20V0H0Z"
-            fill="#0D0D0D"
-          />
-        </svg>
+          TASTY&apos;S JOINT
+        </p>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
-          {/* Brand column */}
-          <div className="flex flex-col gap-4">
-            <div className="relative inline-flex">
-              <span className="font-bebas text-3xl tracking-widest text-cream-white">
-                TASTY&apos;S JOINT
-              </span>
-              <span className="absolute -top-1 -right-3 w-2 h-2 rounded-full bg-cheese-yellow" />
-            </div>
-            <p className="font-inter text-sm text-muted-text leading-relaxed max-w-xs">
-              Sausalito&apos;s boldest burger spot. Fresh ingredients, great
-              flavors, local vibes.
-            </p>
-            {/* Social icons */}
-            <div className="flex items-center gap-4 mt-2">
-              {socialLinks.map((s) => (
-                <a
-                  key={s.label}
-                  href={s.href}
-                  aria-label={s.label}
-                  className="w-9 h-9 rounded-lg bg-grill-black border border-white/10 flex items-center justify-center text-muted-text hover:text-cheese-yellow hover:border-cheese-yellow/30 transition-all duration-200 cursor-pointer"
-                >
-                  {s.icon}
-                </a>
-              ))}
-            </div>
+      {/* Main footer row */}
+      <div
+        className="footer-grid"
+        style={{
+          display: 'grid',
+          gridTemplateColumns: '2fr 1fr 1fr 1fr',
+          gap: '3rem',
+          marginBottom: '3rem',
+        }}
+      >
+        {/* Brand col */}
+        <div className="footer-reveal">
+          <div
+            style={{
+              fontFamily: 'var(--font-playfair), serif',
+              fontSize: '1.1rem',
+              fontWeight: 700,
+              color: 'var(--white)',
+              letterSpacing: '0.08em',
+              marginBottom: '1rem',
+            }}
+          >
+            Tasty&apos;s Joint
           </div>
-
-          {/* Navigation */}
-          <div>
-            <h4 className="font-bebas text-xl tracking-widest text-cream-white mb-5">
-              NAVIGATE
-            </h4>
-            <ul className="flex flex-col gap-3">
-              {navLinks.map((link) => (
-                <li key={link.label}>
-                  <Link
-                    href={link.href}
-                    className="font-inter text-sm text-muted-text hover:text-cheese-yellow transition-colors duration-200"
-                  >
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Contact info */}
-          <div>
-            <h4 className="font-bebas text-xl tracking-widest text-cream-white mb-5">
-              VISIT US
-            </h4>
-            <div className="flex flex-col gap-4">
-              <div>
-                <p className="font-inter text-xs text-muted-text uppercase tracking-widest mb-1">
-                  Address
-                </p>
-                <p className="font-inter text-sm text-cream-white">
-                  43 Caledonia St
-                  <br />
-                  Sausalito, CA 94965
-                </p>
-              </div>
-              <div>
-                <p className="font-inter text-xs text-muted-text uppercase tracking-widest mb-1">
-                  Phone
-                </p>
-                <a
-                  href="tel:4157299328"
-                  className="font-inter text-sm text-cream-white hover:text-cheese-yellow transition-colors"
-                >
-                  (415) 729-9328
-                </a>
-              </div>
-              <div>
-                <p className="font-inter text-xs text-muted-text uppercase tracking-widest mb-1">
-                  Hours
-                </p>
-                <p className="font-inter text-sm text-cream-white">
-                  Open Daily · 11 AM – 9 PM
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Bottom bar */}
-        <div className="mt-14 pt-7 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="font-inter text-xs text-muted-text">
-            © 2025 Tasty&apos;s Joint, Sausalito CA. Website design preview.
+          <p
+            style={{
+              fontFamily: 'var(--font-inter), sans-serif',
+              fontSize: '0.75rem',
+              color: 'var(--gray)',
+              lineHeight: 1.7,
+              maxWidth: '260px',
+              margin: 0,
+            }}
+          >
+            Premium burgers in the heart of Sausalito, CA. Bold flavor, fresh ingredients, unforgettable experience.
           </p>
-          <div className="flex items-center gap-1">
-            <span className="w-2 h-2 rounded-full bg-pickle-green animate-pulse" />
-            <p className="font-inter text-xs text-muted-text">
-              Open now · 11 AM – 9 PM daily
-            </p>
+        </div>
+
+        {/* Nav col */}
+        <div className="footer-reveal">
+          <p
+            style={{
+              fontFamily: 'var(--font-inter), sans-serif',
+              fontSize: '0.6rem',
+              fontWeight: 600,
+              letterSpacing: '0.25em',
+              color: 'var(--gray)',
+              textTransform: 'uppercase',
+              marginBottom: '1.25rem',
+              margin: '0 0 1.25rem',
+            }}
+          >
+            Navigate
+          </p>
+          <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '0.75rem', padding: 0, margin: 0 }}>
+            {NAV_LINKS.map((link) => (
+              <li key={link.label}>
+                <a
+                  href={link.href}
+                  style={{
+                    fontFamily: 'var(--font-inter), sans-serif',
+                    fontSize: '0.75rem',
+                    color: 'var(--gray)',
+                    textDecoration: 'none',
+                    letterSpacing: '0.04em',
+                    transition: 'color 0.2s ease',
+                  }}
+                  onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.color = 'var(--white)'; }}
+                  onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.color = 'var(--gray)'; }}
+                >
+                  {link.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        {/* Hours col */}
+        <div className="footer-reveal">
+          <p
+            style={{
+              fontFamily: 'var(--font-inter), sans-serif',
+              fontSize: '0.6rem',
+              fontWeight: 600,
+              letterSpacing: '0.25em',
+              color: 'var(--gray)',
+              textTransform: 'uppercase',
+              margin: '0 0 1.25rem',
+            }}
+          >
+            Hours
+          </p>
+          <div
+            style={{
+              fontFamily: 'var(--font-inter), sans-serif',
+              fontSize: '0.75rem',
+              color: 'var(--gray)',
+              lineHeight: 2,
+            }}
+          >
+            <div>Mon–Thu 11AM–9PM</div>
+            <div>Fri–Sat 11AM–10PM</div>
+            <div>Sun 11AM–8PM</div>
           </div>
         </div>
+
+        {/* Address col */}
+        <div className="footer-reveal">
+          <p
+            style={{
+              fontFamily: 'var(--font-inter), sans-serif',
+              fontSize: '0.6rem',
+              fontWeight: 600,
+              letterSpacing: '0.25em',
+              color: 'var(--gray)',
+              textTransform: 'uppercase',
+              margin: '0 0 1.25rem',
+            }}
+          >
+            Find Us
+          </p>
+          <address
+            style={{
+              fontFamily: 'var(--font-inter), sans-serif',
+              fontSize: '0.75rem',
+              color: 'var(--gray)',
+              lineHeight: 1.8,
+              fontStyle: 'normal',
+            }}
+          >
+            43 Caledonia St<br />
+            Sausalito, CA 94965<br />
+            <a
+              href="tel:4157299328"
+              style={{ color: 'var(--gold)', textDecoration: 'none' }}
+            >
+              (415) 729-9328
+            </a>
+          </address>
+        </div>
       </div>
+
+      {/* Bottom bar */}
+      <div
+        className="footer-reveal"
+        style={{
+          paddingTop: '1.5rem',
+          borderTop: '1px solid var(--border)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          gap: '1rem',
+          flexWrap: 'wrap',
+        }}
+      >
+        <p
+          style={{
+            fontFamily: 'var(--font-inter), sans-serif',
+            fontSize: '0.65rem',
+            color: 'var(--gray)',
+            letterSpacing: '0.04em',
+            margin: 0,
+          }}
+        >
+          &copy; 2025 Tasty&apos;s Joint &nbsp;&middot;&nbsp; All rights reserved
+        </p>
+        <p
+          style={{
+            fontFamily: 'var(--font-inter), sans-serif',
+            fontSize: '0.65rem',
+            color: 'rgba(136,136,136,0.5)',
+            letterSpacing: '0.04em',
+            margin: 0,
+          }}
+        >
+          Crafted with pride in Sausalito, CA
+        </p>
+      </div>
+
+      <style>{`
+        @media (max-width: 900px) {
+          .footer-grid {
+            grid-template-columns: 1fr 1fr !important;
+          }
+        }
+        @media (max-width: 480px) {
+          .footer-grid {
+            grid-template-columns: 1fr !important;
+          }
+        }
+      `}</style>
     </footer>
-  );
-}
-
-function InstagramIcon() {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={1.8}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className="w-4 h-4"
-    >
-      <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
-      <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
-      <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
-    </svg>
-  );
-}
-
-function FacebookIcon() {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={1.8}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className="w-4 h-4"
-    >
-      <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
-    </svg>
-  );
-}
-
-function YelpIcon() {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 24 24"
-      fill="currentColor"
-      className="w-4 h-4"
-    >
-      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14.5v-5l-4 2.5 4 2.5zm2 0l4-2.5-4-2.5v5zm-1-7.5V4l-4 2.5 4 2.5zm2 0l4-2.5L14 4v5z" />
-    </svg>
   );
 }
