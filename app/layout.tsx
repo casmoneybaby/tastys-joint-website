@@ -101,7 +101,6 @@ export default function RootLayout({
       </head>
       <body
         className={`${bebasNeue.variable} ${inter.variable} ${playfair.variable} antialiased`}
-        style={{ backgroundColor: 'var(--black)', color: 'var(--white)' }}
       >
         <Navbar />
         <main>{children}</main>

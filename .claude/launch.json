@@ -3,8 +3,8 @@
   "configurations": [
     {
       "name": "tastys-joint",
-      "runtimeExecutable": "/opt/homebrew/opt/node/bin/node",
-      "runtimeArgs": ["/opt/homebrew/opt/node/bin/npm", "run", "dev"],
+      "runtimeExecutable": "/bin/zsh",
+      "runtimeArgs": ["-lc", "export PATH=\"/opt/homebrew/bin:$PATH\" && npm run dev"],
       "port": 3000,
       "autoPort": true
     }
