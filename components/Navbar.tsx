@@ -2,14 +2,14 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { motion, AnimatePresence } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 
 const navLinks = [
-  { label: "Home", href: "/" },
-  { label: "Menu", href: "/menu" },
-  { label: "About", href: "/about" },
-  { label: "Location", href: "#location" },
-  { label: "Contact", href: "#contact" },
+  { label: "MENU", href: "/menu" },
+  { label: "ABOUT", href: "/about" },
+  { label: "VISIT", href: "#visit" },
+  { label: "REVIEWS", href: "#reviews" },
+  { label: "CONTACT", href: "#contact" },
 ];
 
 export default function Navbar() {
@@ -17,146 +17,125 @@ export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 20);
-    };
+    const handleScroll = () => setScrolled(window.scrollY > 10);
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   useEffect(() => {
-    if (mobileOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-    }
-    return () => {
-      document.body.style.overflow = "";
-    };
+    document.body.style.overflow = mobileOpen ? "hidden" : "";
+    return () => { document.body.style.overflow = ""; };
   }, [mobileOpen]);
 
   return (
     <>
-      <motion.nav
-        initial={{ y: -100, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.6, ease: "easeOut" }}
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-          scrolled ? "glass py-3 shadow-lg" : "py-5 bg-transparent"
-        }`}
-      >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between">
-            {/* Logo */}
-            <Link href="/" className="flex items-center gap-2 group">
-              <div className="relative">
-                <span className="font-bebas text-2xl md:text-3xl tracking-widest text-cream-white group-hover:text-cheese-yellow transition-colors duration-200">
-                  TASTY&apos;S JOINT
-                </span>
-                <span className="absolute -top-1 -right-3 w-2 h-2 rounded-full bg-cheese-yellow animate-pulse-glow" />
-              </div>
-            </Link>
+      {/* Announcement Bar */}
+      <div className="announcement-bar">
+        <span>NOW SERVING SAUSALITO, CA &nbsp;|&nbsp; DINE-IN &bull; TAKEOUT &bull; DELIVERY</span>
+      </div>
 
-            {/* Desktop nav links */}
-            <div className="hidden md:flex items-center gap-8">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.label}
-                  href={link.href}
-                  className="font-inter text-sm font-medium text-muted-text hover:text-cheese-yellow transition-colors duration-200 tracking-wide uppercase"
-                >
-                  {link.label}
-                </Link>
-              ))}
+      {/* Navbar */}
+      <nav className={`navbar${scrolled ? " scrolled" : ""}`} role="navigation" aria-label="Main navigation">
+        <div className="navbar-inner">
+          {/* Logo */}
+          <Link href="/" className="nav-logo" aria-label="Tasty's Joint — Home">
+            <span className="nav-logo-top">TASTY&apos;S</span>
+            <div className="nav-logo-bottom">
+              <span className="nav-logo-line" />
+              <span>JOINT</span>
+              <span className="nav-logo-line" />
             </div>
+          </Link>
 
-            {/* Phone + CTA */}
-            <div className="hidden md:flex items-center gap-4">
-              <a
-                href="tel:4157299328"
-                className="flex items-center gap-2 text-cream-white hover:text-cheese-yellow transition-colors duration-200 font-inter text-sm font-medium"
-              >
-                <PhoneIcon />
-                (415) 729-9328
-              </a>
-              <a
-                href="tel:4157299328"
-                className="btn-primary text-sm py-2.5 px-5"
-              >
-                Call Now
-              </a>
-            </div>
+          {/* Desktop Nav Links */}
+          <ul className="nav-links hidden md:flex" aria-label="Site navigation">
+            {navLinks.map((link) => (
+              <li key={link.label}>
+                <Link href={link.href}>{link.label}</Link>
+              </li>
+            ))}
+          </ul>
 
-            {/* Mobile hamburger */}
-            <button
-              onClick={() => setMobileOpen(!mobileOpen)}
-              className="md:hidden flex flex-col gap-1.5 p-2 cursor-pointer focus:outline-none"
-              aria-label="Toggle mobile menu"
-            >
-              <motion.span
-                animate={mobileOpen ? { rotate: 45, y: 8 } : { rotate: 0, y: 0 }}
-                transition={{ duration: 0.2 }}
-                className="block w-6 h-0.5 bg-cream-white origin-center"
-              />
-              <motion.span
-                animate={mobileOpen ? { opacity: 0 } : { opacity: 1 }}
-                transition={{ duration: 0.2 }}
-                className="block w-6 h-0.5 bg-cream-white"
-              />
-              <motion.span
-                animate={mobileOpen ? { rotate: -45, y: -8 } : { rotate: 0, y: 0 }}
-                transition={{ duration: 0.2 }}
-                className="block w-6 h-0.5 bg-cream-white origin-center"
-              />
-            </button>
-          </div>
+          {/* Order Button */}
+          <a
+            href="tel:4157299328"
+            className="nav-order-btn hidden md:inline-flex"
+            aria-label="Order online"
+          >
+            <BagIcon />
+            ORDER ONLINE
+          </a>
+
+          {/* Mobile Hamburger */}
+          <button
+            onClick={() => setMobileOpen(!mobileOpen)}
+            className="md:hidden flex flex-col gap-[5px] p-2 cursor-pointer focus:outline-none"
+            aria-label={mobileOpen ? "Close menu" : "Open menu"}
+            aria-expanded={mobileOpen}
+          >
+            <motion.span
+              animate={mobileOpen ? { rotate: 45, y: 7 } : { rotate: 0, y: 0 }}
+              transition={{ duration: 0.22 }}
+              className="block w-5 h-[1.5px] bg-white origin-center"
+            />
+            <motion.span
+              animate={mobileOpen ? { opacity: 0 } : { opacity: 1 }}
+              transition={{ duration: 0.18 }}
+              className="block w-5 h-[1.5px] bg-white"
+            />
+            <motion.span
+              animate={mobileOpen ? { rotate: -45, y: -7 } : { rotate: 0, y: 0 }}
+              transition={{ duration: 0.22 }}
+              className="block w-5 h-[1.5px] bg-white origin-center"
+            />
+          </button>
         </div>
-      </motion.nav>
+      </nav>
 
-      {/* Mobile menu overlay */}
+      {/* Mobile overlay */}
       <AnimatePresence>
         {mobileOpen && (
           <motion.div
             initial={{ opacity: 0, x: "100%" }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: "100%" }}
-            transition={{ duration: 0.3, ease: "easeInOut" }}
-            className="fixed inset-0 z-40 bg-grill-black flex flex-col pt-24 pb-8 px-6"
+            transition={{ duration: 0.28, ease: "easeInOut" }}
+            className="fixed inset-0 z-40 flex flex-col pt-20 pb-10 px-6"
+            style={{ background: "#000000" }}
           >
-            <div className="flex flex-col gap-6 flex-1">
+            <ul className="flex flex-col gap-2 flex-1" role="menu">
               {navLinks.map((link, i) => (
-                <motion.div
+                <motion.li
                   key={link.label}
-                  initial={{ opacity: 0, x: 30 }}
+                  role="menuitem"
+                  initial={{ opacity: 0, x: 24 }}
                   animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: i * 0.07, duration: 0.3 }}
+                  transition={{ delay: i * 0.06, duration: 0.28 }}
                 >
                   <Link
                     href={link.href}
                     onClick={() => setMobileOpen(false)}
-                    className="font-bebas text-5xl text-cream-white hover:text-cheese-yellow transition-colors duration-200 tracking-widest block"
+                    className="block font-bebas text-5xl tracking-widest text-white hover:text-gold transition-colors py-2"
+                    style={{ color: "var(--white)", fontFamily: "var(--font-bebas-neue)" }}
                   >
                     {link.label}
                   </Link>
-                </motion.div>
+                </motion.li>
               ))}
-            </div>
-
+            </ul>
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4, duration: 0.3 }}
-              className="flex flex-col gap-4 mt-8"
+              transition={{ delay: 0.36, duration: 0.28 }}
+              className="mt-8"
             >
               <a
                 href="tel:4157299328"
-                className="flex items-center gap-3 text-cheese-yellow font-bebas text-2xl tracking-widest"
+                className="nav-order-btn w-full justify-center text-base py-4"
+                onClick={() => setMobileOpen(false)}
               >
-                <PhoneIcon />
-                (415) 729-9328
-              </a>
-              <a href="tel:4157299328" className="btn-primary text-center w-full">
-                Call Now to Order
+                <BagIcon />
+                ORDER ONLINE
               </a>
             </motion.div>
           </motion.div>
@@ -166,19 +145,23 @@ export default function Navbar() {
   );
 }
 
-function PhoneIcon() {
+function BagIcon() {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 24 24"
-      fill="currentColor"
-      className="w-4 h-4"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={1.8}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      width={14}
+      height={14}
+      aria-hidden="true"
     >
-      <path
-        fillRule="evenodd"
-        d="M1.5 4.5a3 3 0 013-3h1.372c.86 0 1.61.586 1.819 1.42l1.105 4.423a1.875 1.875 0 01-.694 1.955l-1.293.97c-.135.101-.164.249-.126.352a11.285 11.285 0 006.697 6.697c.103.038.25.009.352-.126l.97-1.293a1.875 1.875 0 011.955-.694l4.423 1.105c.834.209 1.42.959 1.42 1.82V19.5a3 3 0 01-3 3h-2.25C8.552 22.5 1.5 15.448 1.5 6.75V4.5z"
-        clipRule="evenodd"
-      />
+      <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
+      <line x1="3" y1="6" x2="21" y2="6" />
+      <path d="M16 10a4 4 0 0 1-8 0" />
     </svg>
   );
 }
